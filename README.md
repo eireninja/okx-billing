@@ -132,13 +132,6 @@ billing/
 └── .env              # Environment configuration
 ```
 
-### Adding New Features
-
-1. Create feature branch
-2. Update relevant test files
-3. Add JSDoc documentation
-4. Submit pull request
-
 ## 📝 License
 
 MIT License - see LICENSE file for details
