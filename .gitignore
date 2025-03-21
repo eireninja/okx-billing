@@ -2,8 +2,8 @@
 .env
 
 # Generated reports
-okx_trading_report_*.json
-okx_pnl_report_*.csv
+# okx_trading_report_*.json
+# okx_pnl_report_*.csv
 
 # Node.js
 node_modules/

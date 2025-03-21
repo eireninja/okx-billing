@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Cloudflare D1 database client for managing OKX API credentials.
+ * This module provides a client for interacting with Cloudflare D1 database,
+ * specifically for retrieving and managing user API keys and trading configurations.
+ */
+
 // Load environment variables from .env file
 require("dotenv").config();
 
@@ -6,17 +12,35 @@ const fetch = require("node-fetch");
 // Hardcoded exchange name
 const EXCHANGE_NAME = "OKX";
 
+/**
+ * Client for interacting with Cloudflare D1 database
+ * @class
+ */
 class CloudflareD1Client {
-  constructor(accountId, databaseId, apiToken) {
-    this.accountId = accountId;
-    this.databaseId = databaseId;
-    this.apiToken = apiToken;
-    this.baseUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${databaseId}`;
+  /**
+   * Create a CloudflareD1Client instance
+   * @param {Object} config - Configuration object
+   * @param {string} config.accountId - Cloudflare account ID
+   * @param {string} config.databaseId - D1 database ID
+   * @param {string} config.apiToken - Cloudflare API token
+   */
+  constructor(config) {
+    this.accountId = config.accountId;
+    this.databaseId = config.databaseId;
+    this.apiToken = config.apiToken;
+    this.baseUrl = `https://api.cloudflare.com/client/v4/accounts/${config.accountId}/d1/database/${config.databaseId}`;
   }
 
-  async executeQuery(sqlQuery, params = []) {
+  /**
+   * Execute a SQL query on the D1 database
+   * @param {string} query - SQL query to execute
+   * @param {Array} params - Query parameters
+   * @returns {Promise<Object>} Query results
+   * @throws {Error} If the query fails
+   */
+  async executeQuery(query, params = []) {
     try {
-      console.log(`Executing query: ${sqlQuery}`);
+      console.log(`Executing query: ${query}`);
       console.log(`With params: ${JSON.stringify(params)}`);
 
       const response = await fetch(`${this.baseUrl}/query`, {
@@ -26,7 +50,7 @@ class CloudflareD1Client {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sql: sqlQuery,
+          sql: query,
           params: params,
         }),
       });
@@ -81,16 +105,17 @@ class CloudflareD1Client {
   }
 
   /**
-   * Get API keys for OKX exchange
-   * @returns {Object|null} API keys for OKX or null if not found
+   * Get API keys for a specific exchange
+   * @param {string} exchange - Exchange name (e.g., 'OKX')
+   * @returns {Promise<Array>} List of API keys with user information
    */
-  async getApiKeys() {
-    console.log(`Fetching API keys for ${EXCHANGE_NAME}`);
+  async getApiKeys(exchange) {
+    console.log(`Fetching API keys for ${exchange}`);
 
     try {
       const data = await this.executeQuery(
         "SELECT api_key, secret_key, passphrase FROM api_keys WHERE exchange = ? LIMIT 1",
-        [EXCHANGE_NAME]
+        [exchange]
       );
 
       // Check if the response has the expected structure and contains results
@@ -102,15 +127,15 @@ class CloudflareD1Client {
         data.result[0].results &&
         data.result[0].results.length > 0
       ) {
-        console.log(`Found API keys for ${EXCHANGE_NAME}`);
+        console.log(`Found API keys for ${exchange}`);
         return data.result[0].results[0];
       }
 
-      console.log(`No ${EXCHANGE_NAME} API keys found in the database`);
+      console.log(`No ${exchange} API keys found in the database`);
       return null;
     } catch (error) {
       console.error(
-        `Error fetching API keys for ${EXCHANGE_NAME}: ${error.message}`
+        `Error fetching API keys for ${exchange}: ${error.message}`
       );
       return null;
     }
@@ -203,11 +228,11 @@ class CloudflareD1Client {
 }
 
 // Create and export the database client instance
-const dbClient = new CloudflareD1Client(
-  process.env.CLOUDFLARE_ACCOUNT_ID,
-  process.env.CLOUDFLARE_DATABASE_ID,
-  process.env.CLOUDFLARE_API_TOKEN
-);
+const dbClient = new CloudflareD1Client({
+  accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+  databaseId: process.env.CLOUDFLARE_DATABASE_ID,
+  apiToken: process.env.CLOUDFLARE_API_TOKEN,
+});
 
 module.exports = {
   dbClient,

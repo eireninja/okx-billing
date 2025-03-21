@@ -1,6 +1,17 @@
+/**
+ * @fileoverview Process OKX trading reports and generate CSV billing summaries.
+ * This script takes a JSON trading report as input and generates a CSV file containing
+ * account balances, PnL data, and fee calculations. All timestamps are in Irish time.
+ */
+
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * Process an OKX trading report and generate a CSV billing summary
+ * @param {string} reportPath - Path to the JSON report file
+ * @throws {Error} If the report file cannot be read or parsed
+ */
 function processReport(reportPath) {
   // Read and parse the report
   const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
