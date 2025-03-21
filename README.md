@@ -49,7 +49,9 @@ Billing summary with columns:
 
 1. Ensure environment variables are set in `.env`:
    ```
-   DATABASE_URL=your_database_url
+   CLOUDFLARE_ACCOUNT_ID=your_account_id
+   CLOUDFLARE_DATABASE_ID=your_database_id
+   CLOUDFLARE_API_TOKEN=your_api_token
    ```
 
 2. Run the billing script:
