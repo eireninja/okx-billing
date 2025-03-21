@@ -1,0 +1,19 @@
+{
+  "name": "billing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "billing.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node billing.js",
+    "test-db": "node test-db.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "node-fetch": "^2.7.0"
+  }
+}

@@ -1,0 +1,29 @@
+# Environment variables
+.env
+
+# Generated reports
+okx_trading_report_*.json
+okx_pnl_report_*.csv
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
