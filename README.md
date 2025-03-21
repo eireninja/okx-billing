@@ -81,7 +81,7 @@ The CSV report includes:
 - Date (DD-MM-YYYY)
 - Time (HH:MM, Irish timezone)
 - Account holder details
-- PnL breakdown:
+- PnL breakdown last 30 days total for:
   - Spot trading
   - USDT perpetuals
   - Inverse perpetuals
@@ -109,7 +109,6 @@ node test-bills.js
 
 - Reports are generated for the current day's trading activity
 - All timestamps are in Irish time (Europe/Dublin timezone)
-- Reports can be generated at any time but typically run at end of day
 - Historical data is preserved in both JSON and CSV formats
 
 ## 🔒 Security
