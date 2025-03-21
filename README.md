@@ -21,7 +21,8 @@ A robust Node.js application for generating detailed billing reports from OKX tr
 - **Data Management**
   - Cloudflare D1 database integration
   - Secure API key storage
-  - Historical report archiving
+  - Historical report archiving in dated folders
+  - Automatic report organization by date
 
 ## 📋 Prerequisites
 
@@ -70,9 +71,24 @@ This will:
 
 1. Fetch trading data from OKX
 2. Calculate PnL and fees
-3. Generate two files:
+3. Create a dated folder (e.g., `reports_output_21_03_2025`)
+4. Generate and store two files in the dated folder:
    - `okx_trading_report_[timestamp].json`: Raw trading data
    - `okx_pnl_report_[timestamp].csv`: Processed billing report
+
+### Report Organization
+
+Reports are organized in dated folders:
+
+```
+billing/
+├── report_21_03_2025/
+│   ├── okx_trading_report_2025-03-21T17-57-38.json
+│   └── okx_pnl_report_2025-03-21T17-57-38.csv
+└── report_22_03_2025/
+    ├── okx_trading_report_2025-03-22T18-30-45.json
+    └── okx_pnl_report_2025-03-22T18-30-45.csv
+```
 
 ### CSV Report Format
 
@@ -135,3 +151,23 @@ billing/
 ## 📝 License
 
 MIT License - see LICENSE file for details
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Open pull request
+
+## 🐛 Known Issues
+
+- None currently reported
+
+## 📞 Support
+
+For support, please:
+
+1. Check existing GitHub issues
+2. Create new issue with detailed description
+3. Include relevant error messages and logs

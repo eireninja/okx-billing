@@ -8,6 +8,16 @@ const fs = require("fs");
 const path = require("path");
 
 /**
+ * Create a directory if it doesn't exist
+ * @param {string} dirPath - Path to directory
+ */
+function ensureDirectoryExists(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+/**
  * Process an OKX trading report and generate a CSV billing summary
  * @param {string} reportPath - Path to the JSON report file
  * @throws {Error} If the report file cannot be read or parsed
@@ -33,6 +43,12 @@ function processReport(reportPath) {
     hour12: false,
     timeZone: "Europe/Dublin",
   });
+
+  // Create dated folder
+  const [day, month, year] = formattedDate.split("/");
+  const folderName = `reports_output_${day}_${month}_${year}`;
+  const outputDir = path.join(__dirname, folderName);
+  ensureDirectoryExists(outputDir);
 
   // Add header
   lines.push(
@@ -105,16 +121,21 @@ function processReport(reportPath) {
     lines.push(csvLine);
   });
 
-  // Generate output filename based on report timestamp
-  const timestamp = report.timestamp.replace(/:/g, "-").replace(/\./g, "-");
-  const outputPath = path.join(
-    path.dirname(reportPath),
-    `okx_pnl_report_${timestamp}.csv`
+  // Write CSV file to dated folder
+  const csvPath = path.join(
+    outputDir,
+    `okx_pnl_report_${reportDate.toISOString().replace(/:/g, "-")}.csv`
   );
+  fs.writeFileSync(csvPath, lines.join("\n"));
+  console.log(`CSV report written to: ${csvPath}`);
 
-  // Write to CSV file
-  fs.writeFileSync(outputPath, lines.join("\n"), "utf8");
-  console.log(`CSV report generated: ${outputPath}`);
+  // Move JSON report to dated folder
+  const jsonFileName = path.basename(reportPath);
+  const jsonDestPath = path.join(outputDir, jsonFileName);
+  fs.renameSync(reportPath, jsonDestPath);
+  console.log(`JSON report moved to: ${jsonDestPath}`);
+
+  return csvPath;
 }
 
 // Get report path from command line argument
